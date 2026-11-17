@@ -4,6 +4,19 @@ Notable changes per release. Versions follow the plugin id
 `com.leavingrain.imrepo`; packages are named
 `com.leavingrain.imrepo-<version>-<target>.dbxp`.
 
+## 1.0.3
+
+**The region dropdown installs again ([#5]).** 1.0.2 gave AWS, Aliyun and
+Tencent options the same value for shared region IDs (`us-east-1`,
+`ap-southeast-1`, …), and the host rejects a contribution with duplicate choice
+values at install time: "Contribution at index 0 field 16 has invalid or
+duplicate choice options". Option values now carry a provider prefix
+(`aws-ecr:us-east-1`, `aliyun-aksk:cn-hangzhou`, `tencent-aksk:ap-guangzhou`)
+and the sidecar strips it before signing; connections stored with an unprefixed
+region keep working.
+
+[#5]: https://github.com/LeavingRain/dbx-plugin-imrepo/issues/5
+
 ## 1.0.2
 
 **A tag moved to another platform now refreshes its ARCH badge.** A registry can
