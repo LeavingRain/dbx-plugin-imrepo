@@ -7,5 +7,5 @@
   "source": "https://github.com/LeavingRain/dbx-plugin-imrepo",
   "homepage": "https://github.com/LeavingRain/dbx-plugin-imrepo",
   "license": "Apache-2.0",
-  "releaseNotes": "Private AWS ECR repository browsing with DescriptionRepositories and the AWS credential chain, image archive upload/download (.tar/.tar.gz), Docker Registry v2 projects, registry overview charts, and one badge per architecture. Repository moved to github.com/LeavingRain/dbx-plugin-imrepo. Security note: the last connection password / CLI secret is cached base64-encoded (encoding, not encryption) in credentials.json under the plugin data directory; prefer least-privilege robot accounts or read-only tokens and delete the file when no longer needed."
+  "releaseNotes": "Fixes the region-dropdown install error (issue #5). Private AWS ECR repository browsing with DescribeRepositories and the AWS credential chain, image archive upload/download (.tar/.tar.gz), Docker Registry v2 projects, registry overview charts, and one badge per architecture. Repository moved to github.com/LeavingRain/dbx-plugin-imrepo. Security note: the last connection password / CLI secret is cached base64-encoded (encoding, not encryption) in credentials.json under the plugin data directory; prefer least-privilege robot accounts or read-only tokens and delete the file when no longer needed."
 }
