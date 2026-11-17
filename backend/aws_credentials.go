@@ -37,7 +37,7 @@ type awsCredentials struct {
 }
 
 func resolveAwsCredentials(conn *Connection) (*awsCredentials, error) {
-	region := strings.TrimSpace(conn.configStr("region"))
+	region := conn.regionValue()
 	if region == "" {
 		region = firstEnv("AWS_REGION", "AWS_DEFAULT_REGION")
 	}

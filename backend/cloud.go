@@ -109,7 +109,7 @@ type aliyunAuth struct {
 func newAliyunAuth(conn *Connection) (*aliyunAuth, error) {
 	ak := conn.configStr("access_key_id")
 	sk := conn.secretStr("secret_access_key")
-	region := conn.configStr("region")
+	region := conn.regionValue()
 	if ak == "" || sk == "" || region == "" {
 		return nil, fmt.Errorf("Aliyun ACR requires access_key_id, secret_access_key and region")
 	}
@@ -191,7 +191,7 @@ type tencentAuth struct {
 func newTencentAuth(conn *Connection) (*tencentAuth, error) {
 	sid := conn.configStr("secret_id")
 	sk := conn.secretStr("secret_key")
-	region := conn.configStr("region")
+	region := conn.regionValue()
 	instanceID := conn.configStr("instance_id")
 	if sid == "" || sk == "" || region == "" || instanceID == "" {
 		return nil, fmt.Errorf("Tencent TCR requires secret_id, secret_key, region and instance_id")

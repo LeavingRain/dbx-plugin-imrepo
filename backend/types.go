@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 )
 
 // Connection is the connection object the DBX host passes during lifecycle
@@ -135,6 +136,23 @@ func (c *Connection) authType() string {
 		return "basic"
 	}
 	return t
+}
+
+// regionValue returns the region stored by the connection form.
+//
+// The region select uses provider-prefixed option values (aws-ecr:us-east-1,
+// aliyun-aksk:cn-hangzhou, …) because AWS and Aliyun/Tencent share several
+// region IDs, and the host rejects duplicate choice values. The prefix is only
+// a form-level disambiguator; signing and API calls need the raw ID. Older
+// connections with an unprefixed value keep working unchanged.
+func (c *Connection) regionValue() string {
+	raw := strings.TrimSpace(c.configStr("region"))
+	for _, prefix := range []string{"aws-ecr:", "aliyun-aksk:", "tencent-aksk:"} {
+		if strings.HasPrefix(raw, prefix) {
+			return strings.TrimSpace(strings.TrimPrefix(raw, prefix))
+		}
+	}
+	return raw
 }
 
 // registryType returns the registry preset type.

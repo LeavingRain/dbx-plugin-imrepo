@@ -232,7 +232,7 @@ def main() -> int:
         sc = Sidecar(exe)
         sidecars.append(sc)
         reply = sc.connect(
-            "ecr-explicit", access_key_id="AKIDEXAMPLE",
+            "ecr-explicit", region="aws-ecr:us-east-1", access_key_id="AKIDEXAMPLE",
             secret_access_key="secret-example", session_token="session-example",
         )
         check("connection succeeds with explicit AWS credentials", "result" in reply, reply)
@@ -251,6 +251,9 @@ def main() -> int:
         check("the ECR token was requested", len(token_calls) == 1, token_calls)
         check("the token call was SigV4-signed with the explicit key",
               token_calls and "Credential=AKIDEXAMPLE/" in token_calls[0]["authorization"],
+              token_calls)
+        check("the provider-prefixed region is normalized for SigV4",
+              token_calls and any("/us-east-1/ecr/aws4_request" in c["authorization"] for c in token_calls),
               token_calls)
         check("the token call carried the session token",
               token_calls and token_calls[0]["session"] == "session-example", token_calls)

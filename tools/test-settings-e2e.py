@@ -434,11 +434,20 @@ def main() -> int:
           manifest["id"] == json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))["id"], manifest["id"])
     provider = next(c for c in manifest.get("contributions", []) if c.get("type") == "connection-provider")
     region = next(f for f in provider.get("fields", []) if f.get("key") == "region")
-    region_values = {o.get("value") for o in region.get("options", [])}
+    region_values = [o.get("value") for o in region.get("options", [])]
     check("cloud region is a dropdown, not free text", region.get("type") == "select", region.get("type"))
     check("the dropdown covers AWS, Aliyun and Tencent regions",
-          {"us-east-1", "cn-hangzhou", "ap-guangzhou"} <= region_values,
-          sorted(v for v in region_values if v)[:12])
+          {"aws-ecr:us-east-1", "aliyun-aksk:cn-hangzhou", "tencent-aksk:ap-guangzhou"}
+          <= set(region_values), region_values[:6])
+    duplicate_choices = {}
+    for field in provider.get("fields", []):
+        if field.get("type") != "select":
+            continue
+        values = [o.get("value") for o in field.get("options", [])]
+        repeated = sorted({v for v in values if values.count(v) > 1})
+        if repeated:
+            duplicate_choices[field.get("key")] = repeated
+    check("every select field has unique option values", not duplicate_choices, duplicate_choices)
 
     srv = Server(("127.0.0.1", PORT), Handler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()

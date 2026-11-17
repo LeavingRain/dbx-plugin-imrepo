@@ -300,307 +300,307 @@
             },
             {
               "label": "AWS · us-east-1",
-              "value": "us-east-1"
+              "value": "aws-ecr:us-east-1"
             },
             {
               "label": "AWS · us-east-2",
-              "value": "us-east-2"
+              "value": "aws-ecr:us-east-2"
             },
             {
               "label": "AWS · us-west-1",
-              "value": "us-west-1"
+              "value": "aws-ecr:us-west-1"
             },
             {
               "label": "AWS · us-west-2",
-              "value": "us-west-2"
+              "value": "aws-ecr:us-west-2"
             },
             {
               "label": "AWS · af-south-1",
-              "value": "af-south-1"
+              "value": "aws-ecr:af-south-1"
             },
             {
               "label": "AWS · ap-east-1",
-              "value": "ap-east-1"
+              "value": "aws-ecr:ap-east-1"
             },
             {
               "label": "AWS · ap-northeast-1",
-              "value": "ap-northeast-1"
+              "value": "aws-ecr:ap-northeast-1"
             },
             {
               "label": "AWS · ap-northeast-2",
-              "value": "ap-northeast-2"
+              "value": "aws-ecr:ap-northeast-2"
             },
             {
               "label": "AWS · ap-northeast-3",
-              "value": "ap-northeast-3"
+              "value": "aws-ecr:ap-northeast-3"
             },
             {
               "label": "AWS · ap-south-1",
-              "value": "ap-south-1"
+              "value": "aws-ecr:ap-south-1"
             },
             {
               "label": "AWS · ap-south-2",
-              "value": "ap-south-2"
+              "value": "aws-ecr:ap-south-2"
             },
             {
               "label": "AWS · ap-southeast-1",
-              "value": "ap-southeast-1"
+              "value": "aws-ecr:ap-southeast-1"
             },
             {
               "label": "AWS · ap-southeast-2",
-              "value": "ap-southeast-2"
+              "value": "aws-ecr:ap-southeast-2"
             },
             {
               "label": "AWS · ap-southeast-3",
-              "value": "ap-southeast-3"
+              "value": "aws-ecr:ap-southeast-3"
             },
             {
               "label": "AWS · ap-southeast-4",
-              "value": "ap-southeast-4"
+              "value": "aws-ecr:ap-southeast-4"
             },
             {
               "label": "AWS · ap-southeast-5",
-              "value": "ap-southeast-5"
+              "value": "aws-ecr:ap-southeast-5"
             },
             {
               "label": "AWS · ca-central-1",
-              "value": "ca-central-1"
+              "value": "aws-ecr:ca-central-1"
             },
             {
               "label": "AWS · ca-west-1",
-              "value": "ca-west-1"
+              "value": "aws-ecr:ca-west-1"
             },
             {
               "label": "AWS · eu-central-1",
-              "value": "eu-central-1"
+              "value": "aws-ecr:eu-central-1"
             },
             {
               "label": "AWS · eu-central-2",
-              "value": "eu-central-2"
+              "value": "aws-ecr:eu-central-2"
             },
             {
               "label": "AWS · eu-north-1",
-              "value": "eu-north-1"
+              "value": "aws-ecr:eu-north-1"
             },
             {
               "label": "AWS · eu-south-1",
-              "value": "eu-south-1"
+              "value": "aws-ecr:eu-south-1"
             },
             {
               "label": "AWS · eu-south-2",
-              "value": "eu-south-2"
+              "value": "aws-ecr:eu-south-2"
             },
             {
               "label": "AWS · eu-west-1",
-              "value": "eu-west-1"
+              "value": "aws-ecr:eu-west-1"
             },
             {
               "label": "AWS · eu-west-2",
-              "value": "eu-west-2"
+              "value": "aws-ecr:eu-west-2"
             },
             {
               "label": "AWS · eu-west-3",
-              "value": "eu-west-3"
+              "value": "aws-ecr:eu-west-3"
             },
             {
               "label": "AWS · il-central-1",
-              "value": "il-central-1"
+              "value": "aws-ecr:il-central-1"
             },
             {
               "label": "AWS · me-central-1",
-              "value": "me-central-1"
+              "value": "aws-ecr:me-central-1"
             },
             {
               "label": "AWS · me-south-1",
-              "value": "me-south-1"
+              "value": "aws-ecr:me-south-1"
             },
             {
               "label": "AWS · sa-east-1",
-              "value": "sa-east-1"
+              "value": "aws-ecr:sa-east-1"
             },
             {
               "label": "AWS · mx-central-1",
-              "value": "mx-central-1"
+              "value": "aws-ecr:mx-central-1"
             },
             {
               "label": "Aliyun · cn-hangzhou",
-              "value": "cn-hangzhou"
+              "value": "aliyun-aksk:cn-hangzhou"
             },
             {
               "label": "Aliyun · cn-shanghai",
-              "value": "cn-shanghai"
+              "value": "aliyun-aksk:cn-shanghai"
             },
             {
               "label": "Aliyun · cn-beijing",
-              "value": "cn-beijing"
+              "value": "aliyun-aksk:cn-beijing"
             },
             {
               "label": "Aliyun · cn-shenzhen",
-              "value": "cn-shenzhen"
+              "value": "aliyun-aksk:cn-shenzhen"
             },
             {
               "label": "Aliyun · cn-zhangjiakou",
-              "value": "cn-zhangjiakou"
+              "value": "aliyun-aksk:cn-zhangjiakou"
             },
             {
               "label": "Aliyun · cn-huhehaote",
-              "value": "cn-huhehaote"
+              "value": "aliyun-aksk:cn-huhehaote"
             },
             {
               "label": "Aliyun · cn-wulanchabu",
-              "value": "cn-wulanchabu"
+              "value": "aliyun-aksk:cn-wulanchabu"
             },
             {
               "label": "Aliyun · cn-chengdu",
-              "value": "cn-chengdu"
+              "value": "aliyun-aksk:cn-chengdu"
             },
             {
               "label": "Aliyun · cn-guangzhou",
-              "value": "cn-guangzhou"
+              "value": "aliyun-aksk:cn-guangzhou"
             },
             {
               "label": "Aliyun · cn-heyuan",
-              "value": "cn-heyuan"
+              "value": "aliyun-aksk:cn-heyuan"
             },
             {
               "label": "Aliyun · cn-fuzhou",
-              "value": "cn-fuzhou"
+              "value": "aliyun-aksk:cn-fuzhou"
             },
             {
               "label": "Aliyun · cn-nanjing",
-              "value": "cn-nanjing"
+              "value": "aliyun-aksk:cn-nanjing"
             },
             {
               "label": "Aliyun · cn-hongkong",
-              "value": "cn-hongkong"
+              "value": "aliyun-aksk:cn-hongkong"
             },
             {
               "label": "Aliyun · ap-southeast-1",
-              "value": "ap-southeast-1"
+              "value": "aliyun-aksk:ap-southeast-1"
             },
             {
               "label": "Aliyun · ap-southeast-2",
-              "value": "ap-southeast-2"
+              "value": "aliyun-aksk:ap-southeast-2"
             },
             {
               "label": "Aliyun · ap-southeast-3",
-              "value": "ap-southeast-3"
+              "value": "aliyun-aksk:ap-southeast-3"
             },
             {
               "label": "Aliyun · ap-southeast-5",
-              "value": "ap-southeast-5"
+              "value": "aliyun-aksk:ap-southeast-5"
             },
             {
               "label": "Aliyun · ap-southeast-6",
-              "value": "ap-southeast-6"
+              "value": "aliyun-aksk:ap-southeast-6"
             },
             {
               "label": "Aliyun · ap-northeast-1",
-              "value": "ap-northeast-1"
+              "value": "aliyun-aksk:ap-northeast-1"
             },
             {
               "label": "Aliyun · ap-northeast-2",
-              "value": "ap-northeast-2"
+              "value": "aliyun-aksk:ap-northeast-2"
             },
             {
               "label": "Aliyun · us-west-1",
-              "value": "us-west-1"
+              "value": "aliyun-aksk:us-west-1"
             },
             {
               "label": "Aliyun · us-east-1",
-              "value": "us-east-1"
+              "value": "aliyun-aksk:us-east-1"
             },
             {
               "label": "Aliyun · eu-central-1",
-              "value": "eu-central-1"
+              "value": "aliyun-aksk:eu-central-1"
             },
             {
               "label": "Aliyun · eu-west-1",
-              "value": "eu-west-1"
+              "value": "aliyun-aksk:eu-west-1"
             },
             {
               "label": "Aliyun · me-east-1",
-              "value": "me-east-1"
+              "value": "aliyun-aksk:me-east-1"
             },
             {
               "label": "Aliyun · me-central-1",
-              "value": "me-central-1"
+              "value": "aliyun-aksk:me-central-1"
             },
             {
               "label": "Tencent · ap-guangzhou",
-              "value": "ap-guangzhou"
+              "value": "tencent-aksk:ap-guangzhou"
             },
             {
               "label": "Tencent · ap-shanghai",
-              "value": "ap-shanghai"
+              "value": "tencent-aksk:ap-shanghai"
             },
             {
               "label": "Tencent · ap-beijing",
-              "value": "ap-beijing"
+              "value": "tencent-aksk:ap-beijing"
             },
             {
               "label": "Tencent · ap-chengdu",
-              "value": "ap-chengdu"
+              "value": "tencent-aksk:ap-chengdu"
             },
             {
               "label": "Tencent · ap-chongqing",
-              "value": "ap-chongqing"
+              "value": "tencent-aksk:ap-chongqing"
             },
             {
               "label": "Tencent · ap-nanjing",
-              "value": "ap-nanjing"
+              "value": "tencent-aksk:ap-nanjing"
             },
             {
               "label": "Tencent · ap-hongkong",
-              "value": "ap-hongkong"
+              "value": "tencent-aksk:ap-hongkong"
             },
             {
               "label": "Tencent · ap-mumbai",
-              "value": "ap-mumbai"
+              "value": "tencent-aksk:ap-mumbai"
             },
             {
               "label": "Tencent · ap-seoul",
-              "value": "ap-seoul"
+              "value": "tencent-aksk:ap-seoul"
             },
             {
               "label": "Tencent · ap-tokyo",
-              "value": "ap-tokyo"
+              "value": "tencent-aksk:ap-tokyo"
             },
             {
               "label": "Tencent · ap-singapore",
-              "value": "ap-singapore"
+              "value": "tencent-aksk:ap-singapore"
             },
             {
               "label": "Tencent · ap-bangkok",
-              "value": "ap-bangkok"
+              "value": "tencent-aksk:ap-bangkok"
             },
             {
               "label": "Tencent · ap-jakarta",
-              "value": "ap-jakarta"
+              "value": "tencent-aksk:ap-jakarta"
             },
             {
               "label": "Tencent · na-siliconvalley",
-              "value": "na-siliconvalley"
+              "value": "tencent-aksk:na-siliconvalley"
             },
             {
               "label": "Tencent · na-ashburn",
-              "value": "na-ashburn"
+              "value": "tencent-aksk:na-ashburn"
             },
             {
               "label": "Tencent · na-toronto",
-              "value": "na-toronto"
+              "value": "tencent-aksk:na-toronto"
             },
             {
               "label": "Tencent · eu-frankfurt",
-              "value": "eu-frankfurt"
+              "value": "tencent-aksk:eu-frankfurt"
             },
             {
               "label": "Tencent · eu-moscow",
-              "value": "eu-moscow"
+              "value": "tencent-aksk:eu-moscow"
             },
             {
               "label": "Tencent · sa-saopaulo",
-              "value": "sa-saopaulo"
+              "value": "tencent-aksk:sa-saopaulo"
             }
           ],
           "visible_when": {
