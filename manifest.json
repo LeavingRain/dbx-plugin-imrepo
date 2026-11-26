@@ -5,7 +5,7 @@
   "name": "IMREPO",
   "version": "1.0.3",
   "publisher": "leavingrain",
-  "description": "IMREPO - Image Registry Studio: browse, manage and inspect OCI / Harbor container registries from a single workbench.",
+  "description": "IMREPO: browse, manage and inspect OCI and Harbor container registries in one workbench.",
   "icon": "assets/plugin.svg",
   "source": "https://github.com/LeavingRain/dbx-plugin-imrepo",
   "homepage": "https://github.com/LeavingRain/dbx-plugin-imrepo",
@@ -653,7 +653,7 @@
     {
       "type": "mcp",
       "id": "com.leavingrain.imrepo.ai",
-      "description": "Ask the registry: list projects, repositories, tags and image details, read vulnerability reports, and (with confirmation) create projects, change visibility, rename or delete tags.",
+      "description": "Query projects, repositories, tags and image details; read vulnerability reports; with confirmation, create projects, change visibility, rename or delete tags.",
       "ai_tools": true,
       "external_tools": false
     }
@@ -661,11 +661,11 @@
   "localizations": {
     "zh-CN": {
       "name": "IMREPO",
-      "description": "IMREPO - 镜像仓库 Studio：在一个工作台内浏览、管理和解析 OCI / Harbor 容器镜像仓库。",
+      "description": "在一个工作台内浏览、管理和检查 OCI / Harbor 容器镜像仓库。",
       "contributions": {
         "com.leavingrain.imrepo.connection": {
           "label": "容器镜像仓库",
-          "description": "连接 OCI / Harbor 镜像仓库（Harbor、Docker Registry v2、Docker Hub、GHCR、阿里云 ACR、腾讯云 TCR、AWS ECR、Azure ACR、Nexus、Artifactory、Quay）。",
+          "description": "连接 OCI / Harbor 镜像仓库：Harbor、Docker Registry v2、Docker Hub、GHCR、阿里云 ACR、腾讯云 TCR、AWS ECR、Azure ACR、Nexus、Artifactory、Quay。",
           "fields": {
             "display_name": {
               "label": "名称"

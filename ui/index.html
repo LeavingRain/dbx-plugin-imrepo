@@ -31,15 +31,15 @@
         <span class="conn-type badge" id="connType"></span>
       </div>
       <div class="topbar-actions">
-        <button class="btn btn-outline" id="btnLogs" title="操作日志">
+        <button class="btn btn-outline" id="btnLogs" title="操作日志" data-i18n-title="logs.title">
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M3 1.5h8.2L13.5 3.8V14.5H3V1.5Zm1.5 1.5v10h7.5V4.4L10.6 3H4.5Zm1.3 3h4.4v1.5H5.8V6Zm0 3h4.4v1.5H5.8V9Z"/></svg>
           <span data-i18n="logs">日志</span>
         </button>
-        <button class="btn btn-outline" id="btnRefresh" title="Refresh">
+        <button class="btn btn-outline" id="btnRefresh" title="Refresh" data-i18n-title="refresh">
           <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M13.6 2.3A7 7 0 1 0 15 8h-2a5 5 0 1 1-1.4-3.6L9.5 6.5H15V1z"/></svg>
           <span data-i18n="refresh">刷新</span>
         </button>
-        <button class="btn btn-outline" id="btnSettings" title="Settings">
+        <button class="btn btn-outline" id="btnSettings" title="Settings" data-i18n-title="settings">
           <!-- sliders: unmistakable at 14px, unlike a gear whose teeth blur -->
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path fill="currentColor" d="M1.5 4.2h6.1v1.6H1.5zM11.3 4.2h3.2v1.6h-3.2z"/>
@@ -84,7 +84,7 @@
               <span data-i18n="upload">上传镜像包</span>
             </button>
             <button class="btn btn-outline btn-sm" id="btnCleanup" disabled
-                    title="清理无 Tag 的孤立镜像">
+                    title="清理无 Tag 产物" data-i18n-title="cleanup.title">
               <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6.5 1.5h3l.4 1.2H13v1.6H3V2.7h3.1l.4-1.2ZM4.1 5.8h7.8l-.55 7.6A1.5 1.5 0 0 1 9.85 14.8H6.15a1.5 1.5 0 0 1-1.5-1.4L4.1 5.8Z"/></svg>
               <span data-i18n="cleanup">清理无 Tag</span>
             </button>
@@ -106,8 +106,8 @@
               <rect x="30" y="82" width="68" height="12" rx="5" fill="#ffffff" opacity="0.55"/>
               <circle cx="82" cy="43" r="5" fill="#2563eb"/>
             </svg>
-            <p data-i18n="empty.title">连接一个镜像仓库以开始浏览</p>
-            <p class="muted" data-i18n="empty.sub">在左侧选择项目或仓库，查看镜像 Tag、镜像层与安全漏洞报告</p>
+            <p data-i18n="empty.title">连接镜像仓库以开始浏览</p>
+            <p class="muted" data-i18n="empty.sub">在左侧选择项目或仓库，查看 Tag、镜像层和漏洞报告</p>
           </div>
         </div>
       </main>
@@ -126,8 +126,8 @@
           <input type="checkbox" id="retagDeleteSource" checked />
           <span data-i18n="retag.deleteSource">同时删除原 Tag（完成重命名）</span>
         </label>
-        <p class="hint" data-i18n="retag.hint">无需重新上传镜像层，仅将原 Manifest 以新 Tag 写回仓库。</p>
-        <p class="hint warn" id="retagNotice" data-i18n="retag.ociNotice" hidden>当前为通用 OCI v2 仓库：只能新增 Tag，原 Tag 需手动删除。</p>
+        <p class="hint" data-i18n="retag.hint">不重新上传镜像层，只把 Manifest 写为新 Tag。</p>
+        <p class="hint warn" id="retagNotice" data-i18n="retag.ociNotice" hidden>OCI v2 仓库只能新增 Tag，原 Tag 需手动删除。</p>
         <p class="hint warn" id="retagProtect" hidden></p>
       </div>
       <div class="modal-footer">
@@ -143,7 +143,7 @@
       <div class="modal-header"><h3 data-i18n="delete.title">删除确认</h3></div>
       <div class="modal-body">
         <p id="deleteMsg"></p>
-        <p class="hint warn" data-i18n="delete.hint">删除为软删除（解除 Tag 与 Manifest 绑定），空间回收需仓库侧执行 GC。</p>
+        <p class="hint warn" data-i18n="delete.hint">软删除：只解除 Tag 与 Manifest 的绑定，空间需仓库执行 GC 后释放。</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="deleteModal" data-i18n="cancel">取消</button>
@@ -166,7 +166,7 @@
   <!-- Vulnerability modal -->
   <div class="modal-mask" id="vulnModal" hidden>
     <div class="modal modal-wide">
-      <div class="modal-header"><h3 data-i18n="vuln.title">安全漏洞报告 (CVE)</h3></div>
+      <div class="modal-header"><h3 data-i18n="vuln.title">漏洞报告 (CVE)</h3></div>
       <div class="modal-body" id="vulnBody"></div>
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="vulnModal" data-i18n="close">关闭</button>
@@ -188,7 +188,7 @@
   <!-- Untagged artifact cleanup modal -->
   <div class="modal-mask" id="cleanupModal" hidden>
     <div class="modal modal-xwide">
-      <div class="modal-header"><h3 data-i18n="cleanup.title">清理无 Tag 的孤立镜像</h3></div>
+      <div class="modal-header"><h3 data-i18n="cleanup.title">清理无 Tag 产物</h3></div>
       <div class="modal-body" id="cleanupBody"></div>
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="cleanupModal" data-i18n="cancel">取消</button>
@@ -248,9 +248,9 @@
       <div class="modal-header"><h3 data-i18n="np.title">新建项目</h3></div>
       <div class="modal-body">
         <label class="field"><span data-i18n="np.name">项目名称</span><input id="newProjectName" placeholder="my-project" autocomplete="off" /></label>
-        <p class="hint" data-i18n="np.nameHint">小写字母、数字与 . _ - 组成，以字母或数字开头。</p>
+        <p class="hint" data-i18n="np.nameHint">小写字母、数字和 . _ -，以字母或数字开头。</p>
         <label class="field"><span data-i18n="project.accessLevel">访问级别</span><span id="newProjectAccess"></span></label>
-        <p class="hint" data-i18n="project.publicDesc">公开项目任何人可拉取；私有项目需登录认证。</p>
+        <p class="hint" data-i18n="project.publicDesc">公开项目任何人可拉取，私有项目需登录。</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="createProjectModal" data-i18n="cancel">取消</button>
@@ -268,7 +268,7 @@
           <button class="btn btn-outline btn-sm" id="btnPickArchive" data-i18n="upload.pick">选择镜像包</button>
           <span class="transfer-file muted" id="uploadFileName" data-i18n="upload.noFile">尚未选择文件</span>
         </div>
-        <p class="hint" data-i18n="upload.formats">支持 docker save 归档与 OCI 镜像布局。</p>
+        <p class="hint" data-i18n="upload.formats">支持 docker save 归档和 OCI 镜像布局。</p>
         <input type="file" id="uploadFileInput" hidden />
         <div id="uploadProgress" hidden>
           <div class="progress"><div class="progress-bar" id="uploadBar"></div></div>

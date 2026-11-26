@@ -267,12 +267,12 @@ def main() -> int:
         # The backend always reports the project page now, so the placeholder is
         # only reachable for a fork that has not set one (?nogithub=1).
         check("About links to the project page",
-              'href="https://github.com/' in dom and "待补充" not in dom)
+              'href="https://github.com/' in dom and "暂未提供" not in dom)
         # A fork that has not set a project page gets a placeholder rather than a
         # dead link, so that branch needs its own render to stay covered.
         no_link = browser.dom("theme=light&modal=settings&nogithub=1", 5000)
         check("a missing project page renders a placeholder, not a dead link",
-              "待补充" in no_link and "settings.githubSoon" not in no_link)
+              "暂未提供" in no_link and "settings.githubSoon" not in no_link)
         check("the settings file path is shown", "settings.json" in dom)
         check("user management offers create / change-password / delete",
               "创建用户" in dom and "修改密码" in dom and "删除" in dom)
@@ -377,7 +377,7 @@ def main() -> int:
         # the click came back as a refusal — which reads as the plugin breaking
         # rather than as the policy working.
         check("an artifact inside the retention window says so before you click",
-              "在保留窗口内" in dom, "the in-window artifact is not marked")
+              "保留期内" in dom, "the in-window artifact is not marked")
 
         dom = browser.dom("theme=light&modal=cleanup&rules=1", 5000)
         check("the cleanup dialog names the rules that produced the list",
@@ -598,7 +598,7 @@ def main() -> int:
 
         dom = browser.dom("theme=light&probe=1&switchconn=1&noredrill=1", 6000)
         check("the previous connection's content pane is emptied",
-              "连接一个镜像仓库以开始浏览" in dom, "the stale view is still on screen")
+              "连接镜像仓库以开始浏览" in dom, "the stale view is still on screen")
         check("...and no artifact of the previous connection is left",
               f"{SLOW}-1" not in dom, "an artifact from the old connection survived")
         check("the breadcrumb is cleared", 'id="crumbs"></div>' in dom,
@@ -971,7 +971,7 @@ def main() -> int:
 
         dom = browser.dom("theme=light&probe=1&transfer=upload&norepo=1", 3000)
         check("upload without a selected repository is refused",
-              "请先在左侧选择一个仓库" in dom
+              "请先选择一个仓库" in dom
               and re.search(r'id="uploadModal"[^>]*hidden', dom) is not None,
               "the dialog opened without a target repository")
         check("...and no upload RPC is sent",

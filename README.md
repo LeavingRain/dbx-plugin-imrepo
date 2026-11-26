@@ -1,136 +1,135 @@
 # IMREPO — Image Registry Studio
 
-> 一个 DBX 插件：在同一个工作台里浏览、管理和检查 OCI / Harbor 容器镜像仓库。
+> DBX 插件：在同一个工作台里浏览、管理和检查 OCI / Harbor 容器镜像仓库。
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![DBX Store](https://img.shields.io/badge/DBX%20Store-已上架-success)](#安装)
 [![Platforms](https://img.shields.io/badge/platforms-windows%20%7C%20linux%20%7C%20macos%20(x64%2Farm64)-informational)](#安装)
 [![Plugin API](https://img.shields.io/badge/DBX%20Host%20API-1-informational)](https://dbxio.com/cn/docs/plugin-development)
 
-基于 OCI 标准，兼容 Harbor 与主流开源/闭源镜像仓库：项目与命名空间导航、Tag 重命名与删除、
-镜像层逐层解析、Trivy 漏洞报告、仓库总览图表、多架构镜像的结构展示。
+兼容 Harbor 和主流 OCI 仓库：项目与命名空间导航、Tag 重命名与删除、镜像层解析、Trivy 漏洞报告、
+总览图表和多架构镜像展示。
 
 ## 安装
 
-在 DBX 的**插件中心**搜索 **IMREPO** 即可（插件 ID `com.leavingrain.imrepo`）。商店中的包由 DBX Store
-签名，安装时会验证，**不需要开启任何"允许未签名开发包"的开关**。
+在 DBX 插件中心搜索 **IMREPO**（插件 ID `com.leavingrain.imrepo`）。商店包由 DBX Store 签名，
+安装时自动验证，不需要开启「允许安装未签名开发包」。
 
 <details>
 <summary>手动安装 / 指定版本</summary>
 
 从 [Releases](https://github.com/LeavingRain/dbx-plugin-imrepo/releases) 下载对应平台的 `.dbxp`：
 `windows-x64` / `windows-arm64` / `linux-x64` / `linux-arm64` / `darwin-x64` / `darwin-arm64`，
-然后在插件中心开启**「允许安装未签名开发包」**。
+然后在插件中心开启「允许安装未签名开发包」。
 
-Release 里放的是**未签名候选包**（即上架用的输入，见[发布](#发布)），内容与商店中的签名包相同；
-这条路适合商店版本暂不可用、或需要固定某个版本的时候。
+Release 里是未签名候选包（上架用的输入，见[发布](#发布)），内容与商店签名包相同。
+适合商店版本暂不可用或需要固定版本时使用。
 </details>
 
-装好后新建连接，选仓库类型（Harbor / Docker Registry v2 / 云厂商托管 …），填地址与认证方式。
+装好后新建连接，选择仓库类型，填写地址和认证方式。
 
-Sidecar 是**静态链接**的 Go 二进制（`CGO_ENABLED=0`），不依赖目标机 libc。已在
-**麒麟 V10（aarch64）、openEuler 24.03（amd64）、Windows 11 Enterprise** 实体机上安装使用；
-CI 另在 ubuntu / windows / macos 三个真实 runner 上各自跑一遍完整测试套件（测的就是发布用的那批字节）。
-细节见 [`docs/DESIGN.md`的平台支持一节](docs/DESIGN.md#平台支持)。
+Sidecar 是静态链接的 Go 二进制（`CGO_ENABLED=0`），不依赖目标机 libc。已在麒麟 V10（aarch64）、
+openEuler 24.03（amd64）和 Windows 11 Enterprise 实体机上安装使用；CI 在 ubuntu、windows、macos
+真实 runner 上各跑一遍完整测试。平台细节见 [docs/DESIGN.md](docs/DESIGN.md#平台支持)。
 
 ## 功能
 
 | 模块 | 说明 |
 |------|------|
-| 连接与预设 | Harbor / Registry v2 / Docker Hub / GHCR / Aliyun ACR / Tencent TCR / AWS ECR / Azure ACR / Nexus / Artifactory / Quay |
-| 多元认证 | Basic/密码、Harbor Robot、Bearer/PAT、云厂商 AK/SK（AWS SigV4、Aliyun HMAC-SHA1、Tencent TC3）、免认证 |
-| 仓库浏览 | Harbor 项目树 / 通用 `_catalog` 列表 / **V2 命名空间树**（V2 无项目对象，按仓库名首段归类），**模糊搜索同时匹配项目与仓库**（匹配的仓库会自动带出其所属项目） |
-| 项目与镜像总览 | 点项目「文件夹」即列出该项目**跨仓库聚合**的全部镜像：镜像数/总大小/仓库数/Tag 数 + 按推送时间降序的列表 |
-| **总览页签与图表** | 统计卡 + SVG 横向柱状图（Harbor：拉取最多的项目、项目存储分布；V2：命名空间存储分布） |
-| **架构结构展示** | 多架构镜像按平台逐个展示为**一个圆圈徽章**（`linux/amd64`、`linux/arm64`…），V2 侧懒加载回填 |
-| Tag 管理 | Tag 列表、**重命名**（写新 Tag + 删原 Tag）、删除（OCI DELETE / Harbor 原生） |
-| **上传镜像包** | 选择本地 `.tar` / `.tar.gz`：解析 docker save 归档或 OCI 镜像布局，按「站点 / 项目 / 仓库 / 版本 / 格式 / ARCH / 层数 / 大小」只读展示包内镜像；多架构镜像只在 ARCH 中选择平台（可选中单平台或全部）；**目标固定为当前仓库，仅目标 Tag 可编辑**（默认源 Tag）；分块传输，完成后关闭对话框 |
-| **下载镜像包** | 把任意 Tag（或无 Tag 的 digest）导出为 `.tar` / `.tar.gz`：Docker 归档（`docker load` 可直接加载）或 OCI 镜像布局（skopeo/podman）；多架构镜像可选平台，OCI 布局可导出全部平台。桌面宿主直接写入保存对话框，网页宿主回退为浏览器下载（大文件会占用内存） |
-| **删除仓库 / 项目** | 整仓、整项目删除（Harbor）：危险区先列出将失去的**真实计数**（仓库/镜像/Tag/大小）与受保留策略保护的 Tag，**必须键入目标名**才能执行；确认在后端校验，绕过界面也拦得住 |
-| 镜像层解析 | Manifest → Index → Config Blob 逐层指令；每层大小（占比条 + 百分比 + 最大层高亮 + 按大小排序） |
-| 漏洞报告 | Harbor/Trivy CVE 分级统计 + **按设置阈值判定**「已达/未达阈值」+ 缓存 + 刷新/触发扫描 |
-| 运维清理 | **清理无 Tag 孤立 Artifact**：只读扫描 → 列清单（含大小与合计）→ 勾选确认 → 逐个**复核后**删除；受规则保护的条目不可选并给出原因 |
-| 设置 | 全局（用户管理/扫描器/关于）+ 项目级（可见性、配额、成员与角色、回收策略、本项目扫描器），按连接持久化，**由后端强制执行** |
-| 快捷工具 | 拉取命令弹窗：镜像地址 / docker / nerdctl / crictl / podman / ctr / docker login，点整行即复制 |
-| 加载体验 | 展开项目后台预热前 6 个仓库；列表 60s 缓存 + 请求去重；**慢响应不会覆盖后点的仓库** |
-| **AWS 私有 ECR** | 仓库列表走 `ecr:DescribeRepositories`（ECR 不实现 `/v2/_catalog`），浏览/Tag/镜像层/上传/下载沿用标准 OCI；认证支持 IAM 用户 AK/SK（可加 Session Token）、环境变量、`~/.aws` profile、ECS 任务角色、EC2 实例角色 |
-| **大文件传输** | 上传以 1 MiB 分块（宿主桥单请求上限 2 MiB，base64 后约 1.4 MiB），下载以 4 MiB 分块并走宿主的二进制保存通道；桌面宿主直接写入原生保存对话框选定的文件。归档临时文件放在插件数据目录的 `transfers/`，关闭对话框或完成后删除，异常退出由 24 小时清扫兜底 |
-| Harbor 自动识别 | 类型选成 Docker Registry v2 但服务器其实是 Harbor 时，探测 `/api/v2.0/ping` 自动启用 Harbor 功能 |
+| 连接与预设 | Harbor / Registry v2 / Docker Hub / GHCR / 阿里云 ACR / 腾讯云 TCR / AWS ECR / Azure ACR / Nexus / Artifactory / Quay |
+| 认证 | Basic、Harbor Robot、Bearer/PAT、云厂商 AK/SK（AWS SigV4、阿里云 HMAC-SHA1、腾讯云 TC3）、免认证 |
+| 仓库浏览 | Harbor 项目树、通用 `_catalog`、V2 命名空间树（按仓库名首段分组）；搜索同时匹配项目和仓库 |
+| 项目总览 | 点项目文件夹列出该项目跨仓库聚合的镜像，含镜像数、总大小、仓库数和 Tag 数，按推送时间排序 |
+| 总览图表 | 统计卡和 SVG 柱状图：Harbor 显示拉取最多的项目和存储分布，V2 显示命名空间存储分布 |
+| 多架构展示 | 每个平台一个徽章（`linux/amd64`、`linux/arm64`…），V2 侧懒加载 |
+| Tag 管理 | 列出 Tag、重命名（写新 Tag + 删原 Tag）、删除（OCI DELETE 或 Harbor 原生接口） |
+| 上传镜像包 | 解析 `.tar` / `.tar.gz` 中的 docker save 归档或 OCI 布局，展示站点、项目、仓库、版本、格式、平台、层数和大小；目标固定为当前仓库，仅目标 Tag 可编辑；分块上传 |
+| 下载镜像包 | 将 Tag 或 digest 导出为 `.tar` / `.tar.gz`：Docker 归档（`docker load` 可直接加载）或 OCI 布局（skopeo/podman）；多架构可选平台，OCI 可导出全部平台。桌面宿主写入保存对话框，网页宿主回退浏览器下载 |
+| 删除仓库 / 项目 | 仅 Harbor。危险区列出将删除的仓库、镜像、Tag、大小和受保护 Tag，必须输入目标名；后端也会校验 |
+| 镜像层解析 | Manifest → Index → Config，逐层指令和大小，带占比、最大层高亮和排序 |
+| 漏洞报告 | Harbor/Trivy CVE 分级统计，按设置阈值判定是否达标，支持缓存、刷新和触发扫描 |
+| 清理无 Tag 产物 | 扫描并列出无 Tag 产物（含大小和合计），勾选后逐个复核删除；受规则保护的条目不可选 |
+| 设置 | 全局（用户、扫描器、关于）和项目级（可见性、配额、成员与角色、回收策略、扫描器），按连接保存，由后端强制执行 |
+| 拉取命令 | 镜像地址、docker、nerdctl、crictl、podman、ctr、docker login，点击整行复制 |
+| 加载体验 | 展开项目时后台预热前 6 个仓库；60 秒列表缓存和请求去重；慢响应不会覆盖后点的仓库 |
+| AWS 私有 ECR | 仓库列表走 `ecr:DescribeRepositories`（ECR 不实现 `/v2/_catalog`），其余功能走标准 OCI；认证支持 AK/SK、Session Token、环境变量、`~/.aws` profile、ECS 任务角色和 EC2 实例角色 |
+| 大文件传输 | 上传按 1 MiB 分块，下载按 4 MiB 分块并走宿主的二进制保存通道；临时文件放在插件数据目录的 `transfers/`，关闭对话框或完成后删除，异常退出由 24 小时清扫兜底 |
+| Harbor 自动识别 | 类型选为 Registry v2 但服务器是 Harbor 时，探测 `/api/v2.0/ping` 后启用 Harbor 功能 |
 
 ## 仓库类型支持范围
 
-插件按「能力」而非「品牌」组织：所有能走标准 OCI Distribution 接口的功能全类型可用，绑定 Harbor 专有
-REST API 的功能只在 Harbor 上出现。**界面上不可用的按钮会置灰并说明原因**，不会静默消失。
+插件按能力而非品牌区分：标准 OCI Distribution 接口的功能所有类型可用；绑定 Harbor REST API 的功能
+只在 Harbor 上出现。不可用的按钮会置灰并说明原因。
 
 | 功能 | Harbor | 通用 OCI v2<br>(Registry / Nexus / Artifactory / Quay / 云厂商托管) | 不可用的原因 |
 |---|:---:|:---:|---|
 | 仓库与镜像浏览 | ✅ | ✅ | — |
 | 命名空间 / 项目树 | ✅ | ✅ | v2 无项目对象，按仓库名首段分组为命名空间 |
-| 架构结构展示 | ✅ | ✅ | 两者都按 tag 读一次 manifest（懒加载并缓存）；Harbor 的列表接口不下发平台信息，实测 `platform: null` |
-| 每 tag 的 sha256 | ✅ | ✅ | v2 的 `tags/list` 不带 digest，与架构读同一次请求取回 |
-| Tag 重命名 | ✅ | ✅ | 重命名 = 写新 Tag + 删原 Tag（OCI 无 rename 原语） |
-| Tag 删除 | ✅ | ✅ | 走 OCI `DELETE`（需仓库开启删除；Harbor 用原生接口按 Tag 删） |
-| 删除仓库 / 项目 | ✅ | ❌ | v2 协议没有仓库级删除接口（只能逐个 tag 删），也没有项目对象；两者都是 Harbor 的 REST 资源 |
+| 多架构展示 | ✅ | ✅ | 两者都按 tag 读 manifest（懒加载并缓存）；Harbor 列表接口不返回平台信息 |
+| 每 tag 的 sha256 | ✅ | ✅ | v2 的 `tags/list` 不带 digest，与架构信息在同一次请求取回 |
+| Tag 重命名 | ✅ | ✅ | OCI 没有 rename 原语，重命名 = 写新 Tag + 删原 Tag |
+| Tag 删除 | ✅ | ✅ | 走 OCI `DELETE`（需仓库开启删除）；Harbor 用原生接口按 Tag 删 |
+| 删除仓库 / 项目 | ✅ | ❌ | v2 协议没有仓库级删除接口，也没有项目对象；两者都是 Harbor 的 REST 资源 |
 | 镜像层逐层解析 | ✅ | ✅ | — |
 | 拉取命令生成 | ✅ | ✅ | — |
-| 上传本地镜像包 (.tar/.tar.gz) | ✅ | ✅ | 走标准 OCI push；Harbor 的目标需写成「项目/仓库」 |
-| 下载镜像包 (.tar/.tar.gz) | ✅ | ✅ | 走标准 OCI pull；导出由 sidecar 边读边打包 |
+| 上传本地镜像包 | ✅ | ✅ | 走标准 OCI push；Harbor 的目标需写成「项目/仓库」 |
+| 下载镜像包 | ✅ | ✅ | 走标准 OCI pull；由 sidecar 边读边打包 |
 | 总览图表（存储分布） | ✅ | ✅ | — |
 | 总览图表（拉取次数） | ✅ | ❌ | 数据来自 Harbor 审计日志，v2 无 |
 | 漏洞报告 (CVE) | ✅ | ❌ | 需要扫描器 API（Harbor/Trivy），v2 协议无此接口 |
-| 无 Tag 孤立产物清理 | ✅ | ❌ | **原理上不可实现**：v2 的 `catalog`/`tags` 只暴露有 tag 的 manifest，无法枚举无 tag 的；Harbor 有专有接口才能列出 |
-| 新建项目 / 配额 / 成员 / 可见性 | ✅ | ❌ | 这些是 Harbor 的 REST 资源，v2 无对应对象（命名空间是分组视图，不需要创建） |
-| 操作日志 | ✅ | ❌ | 同「拉取次数」，审计日志是 Harbor 专有 |
+| 无 Tag 产物清理 | ✅ | ❌ | v2 的 `catalog` / `tags` 只暴露有 tag 的 manifest，无法枚举无 tag 的 |
+| 新建项目 / 配额 / 成员 / 可见性 | ✅ | ❌ | 都是 Harbor 的 REST 资源，v2 无对应对象（命名空间是分组视图） |
+| 操作日志 | ✅ | ❌ | Harbor 专有的审计日志 |
 | 用户管理 | ✅ | ❌ | Harbor 的用户体系，v2 无 |
 
-> 云厂商托管仓库（Docker Hub / GHCR / ACR / TCR / ECR）在协议上都是 OCI v2 + 各自的认证方式，
-> 因此能力范围与「通用 OCI v2」一列相同；差异只在认证（AK/SK 换临时 Token）与是否提供额外的
-> 托管商 API（本插件未对接，因为这些接口不在 OCI 标准内）。
+云厂商托管仓库（Docker Hub、GHCR、ACR、TCR、ECR）在协议上都是 OCI v2 加各自的认证方式，
+能力范围与「通用 OCI v2」一列相同；差异在认证（AK/SK 换临时 Token）和托管商额外 API
+（本插件未对接）。
 
 ## 安全
 
 ### 连接凭据的本地缓存
 
-插件会把**最后一次使用的连接密码**缓存在本地，位置优先跟随 DBX 宿主给出的插件数据目录
-（`DBX_PLUGIN_DATA_DIR`，与插件的 `settings.json` 同一目录）：
+插件会缓存最后一次使用的连接密码，优先放在 DBX 宿主提供的插件数据目录
+（`DBX_PLUGIN_DATA_DIR`，与 `settings.json` 同目录）：
 
 | 部署方式 | 路径 |
 |---|---|
-| 宿主提供了插件数据目录（Docker / dbx-web 与新版桌面端都会提供） | `$DBX_PLUGIN_DATA_DIR/credentials.json` —— 该目录在 **Docker / dbx-web 下位于 DBX 数据目录内**，因此备份/迁移数据目录（官方推荐的迁移方式）时凭据与设置**一并保留** |
+| 宿主提供了插件数据目录（Docker / dbx-web 和新版桌面端） | `$DBX_PLUGIN_DATA_DIR/credentials.json`。该目录位于 DBX 数据目录内，备份或迁移时凭据和设置会一并保留 |
 | 宿主未提供（旧版本宿主、独立运行） | Windows `%AppData%\imrepo-dbx-plugin\`；macOS `~/Library/Application Support/imrepo-dbx-plugin/`；Linux `~/.config/imrepo-dbx-plugin/`（或 `$XDG_CONFIG_HOME` 下同名路径） |
 
-首次在提供数据目录的宿主上启动时，旧位置已有的 `settings.json` / `credentials.json` 会**复制**
-（不是移动）到新位置：新位置已有同名文件则不覆盖，旧文件保留在原处。
+首次在提供数据目录的宿主上启动时，旧位置的 `settings.json` / `credentials.json` 会复制到新位置；
+新位置已有同名文件则不覆盖，旧文件保留。
 
-文件权限为 `0600`（仅属主可读），但 **base64 是编码，不是加密**——能读取该文件的本地进程或
-用户即可还原出密码。这与 `~/.docker/config.json` 的威胁模型相同。
+文件权限为 `0600`，但 base64 是编码不是加密：能读取该文件的本地进程或用户都能还原密码。
+威胁模型与 `~/.docker/config.json` 相同。
 
-**为什么会缓存**：DBX 宿主在重连时可能不再下发连接密钥，没有这份缓存，成员管理、产物清理、
-漏洞报告等需要认证的操作会全部失败。这是插件在"功能可用"与"不在本地留存凭据"之间做的取舍。
+缓存的原因：DBX 重连时可能不再下发连接密钥，没有缓存的话，成员管理、产物清理和漏洞报告等
+需要认证的操作会全部失败。
 
-**你可以怎么做**：
+建议：
 
-- 不需要时直接删除该文件，插件会在下一次需要时重新写入；
-- 更稳妥的做法是为此类连接使用**权限最小化的账号**——Harbor robot account 或只读令牌，
-  而不是管理员账号。插件的大多数功能（浏览、镜像层、架构、漏洞报告、拉取命令）只需要读权限。
+- 不需要时删除该文件，插件下次需要时会重新写入。
+- 此类连接使用最小权限账号，例如 Harbor robot account 或只读令牌，不要用管理员账号。
+  浏览、镜像层、架构、漏洞报告和拉取命令只需要读权限。
 
 ### 其他
 
-- **凭据不经插件 UI**：工作台只持有 `connectionId`，密钥由宿主在生命周期请求中下发给 sidecar。
-- **密钥不落日志**：`stderr` 只输出诊断信息，不含密码或令牌。
-- **删除是软删除**：删除 Tag / Artifact 只解除引用，磁盘空间需由注册库执行 GC 回收——
-  插件提供了 Harbor GC 的查看与触发入口，见「设置 → 镜像回收 (GC)」。
+- 凭据不经 UI：工作台只持有 `connectionId`，密钥由宿主在生命周期请求中下发给 sidecar。
+- 日志不含密钥：`stderr` 只输出诊断信息，不含密码或令牌。
+- 删除是软删除：删除 Tag 或产物只解除引用，空间需注册库执行 GC 回收。插件提供 Harbor GC
+  的查看和触发入口，见「设置 → 镜像回收 (GC)」。
 
 ## AI 助手工具
 
-插件向 **DBX 内置 AI 助手**（Agent 模式）提供工具，全部走标准 MCP 协议。**默认关闭**：需要在
-「插件中心 → 已安装 → 内置 AI 工具」里显式开启，仅安装不会暴露任何东西。
+插件通过 MCP 向 DBX 内置 AI 助手（Agent 模式）提供工具，默认关闭。需要在
+「插件中心 → 已安装 → 内置 AI 工具」中开启。
 
 | 工具 | 作用 | 需确认 |
 |---|---|:---:|
 | `list_projects` | 列项目（Harbor）或命名空间（v2） | — |
 | `list_repositories` | 列某项目下的仓库 | — |
-| `list_tags` | 列 tag：digest / 大小 / **架构** / 推送时间（默认最近 50 个，可调） | — |
+| `list_tags` | 列 tag：digest / 大小 / 架构 / 推送时间（默认最近 50 个） | — |
 | `image_info` | 单个镜像：digest、大小、平台、层数、推送时间 | — |
 | `vulnerabilities` | CVE 汇总与阈值判定（仅 Harbor） | — |
 | `create_project` | 新建项目（仅 Harbor） | ✅ |
@@ -142,15 +141,13 @@ REST API 的功能只在 Harbor 上出现。**界面上不可用的按钮会置�
 
 ### 安全边界
 
-- **只读工具**标了 `readOnlyHint`，可直接执行；**写操作**每次调用都会由宿主弹出**完整参数**让用户
-  选择允许一次或拒绝（5 分钟无响应视为拒绝）。
-- **插件自己的规则不因宿主确认而放宽**：例如删除受保留策略保护的 tag，即使宿主层面用户点了允许，
-  插件仍会拒绝并说明是哪条规则拦下的。工具调用的是**工作台同一套后端函数**，不是另开一条路径——
-  这条是设计底线，否则策略引擎会被绕过。
-- **凭据不经工具参数**：连接信息由宿主在 `lifecycle` 里下发（与连接建立时同一载荷），模型看不到
-  也无需提供任何密钥。
-- 工具只在**用户已打开的连接**上工作，且 `external_tools` 关闭——这些工具**不会**出现在
-  Claude Code / Cursor 等外部 MCP 客户端上。
+- 只读工具带 `readOnlyHint`，可直接执行；写操作每次由宿主弹出完整参数，用户选择允许一次或拒绝
+  （5 分钟无响应视为拒绝）。
+- 插件规则不因宿主确认而放宽。例如删除受保留策略保护的 tag，即使用户在宿主层允许，插件仍会拒绝
+  并说明原因。工具调用的是工作台同一套后端函数，不是另一条路径。
+- 凭据不经工具参数：连接信息由宿主在 `lifecycle` 中下发，模型看不到也无需提供密钥。
+- 工具只在用户已打开的连接上工作，且 `external_tools` 关闭，不会出现在 Claude Code / Cursor
+  等外部 MCP 客户端。
 
 ## 开发
 
@@ -160,39 +157,39 @@ REST API 的功能只在 Harbor 上出现。**界面上不可用的按钮会置�
 npm install                 # 插件 CLI（自带与本版本匹配的 Go SDK）
 npm run package             # 交叉编译六个平台 → dist/*.dbxp + release-candidates.json
 npm run preview             # 生成验证台 .preview/preview.html
-npm test                    # 全量：包门禁 + 5 套端到端 + 配色门禁 + 翻译门禁
+npm test                    # 全量：包门禁 + 10 套端到端 + 配色门禁 + 翻译门禁
 
 npx dbx-plugin dev --path . --port 5190      # 本地调试宿主 → http://127.0.0.1:5190/
 ```
 
-一条命令出全部平台，因为 `CGO_ENABLED=0` 让 Sidecar 静态链接、与构建机 libc 无关。官方 CLI
-`dbx-plugin package .` 只出**当前平台**的包（拒绝交叉编译），所以多平台由
-`tools/build-packages.py` 负责，它会按目标平台**改写 manifest 的 `entrypoints.backend.executable`**
-并给二进制打 0755。官方 CLI 的产物可用来验收：两者的 `manifest.json` 应当逐字节一致。
+`CGO_ENABLED=0` 让 Sidecar 静态链接，与构建机 libc 无关，所以一条命令能出全部平台。
+官方 CLI `dbx-plugin package .` 只能打当前平台的包（拒绝交叉编译），多平台由
+`tools/build-packages.py` 负责：它按目标平台改写 manifest 的 `entrypoints.backend.executable`，
+并给二进制加 0755。官方 CLI 的产物可用于验收：两者的 `manifest.json` 应逐字节一致。
 
 ### 测试
 
-Sidecar 测试跑**打包产物**（`dist/` 里对应当前平台的 `.dbxp` 内的二进制），UI 测试用无头
-浏览器渲染真实 `ui/index.html`。测试是跨平台的：`tools/_harness.py` 按主机自动选包、把配置目录
-隔离到临时目录、并找一个 Chromium 系浏览器（优先 `chrome-headless-shell`，可用 `CHROME_HEADLESS_SHELL` 指定；本机找不到会跳过，**CI 里找不到则直接失败**——跳过与通过无法区分）。
+Sidecar 测试跑打包产物（`dist/` 中对应当前平台的 `.dbxp` 内二进制）；UI 测试用无头浏览器渲染真实
+`ui/index.html`。`tools/_harness.py` 按主机选包、把配置目录隔离到临时目录，并查找 Chromium 系浏览器
+（优先 `chrome-headless-shell`，可用 `CHROME_HEADLESS_SHELL` 指定；本机找不到会跳过，CI 找不到则失败）。
 
-每个测试报出**实际执行的断言数**（`RESULT: ALL PASS (N checks)`），下面的数字可以跑一遍核对：
+每个测试输出实际执行的断言数（`RESULT: ALL PASS (N checks)`）。
 
 | 测试 | 断言数 | 验证的是 |
 |---|---|---|
-| `test-settings-e2e.py` | 193 | 设置的持久化、校验与**实际生效**（后端行为）、V2 命名空间与总览、包布局 |
-| `test-ui-e2e.py` | 217 | 界面行为与策略可见性，含总览图表、架构徽章、连接切换、空项目侧栏、拉取图标、日志日期筛选与镜像包上传/下载对话框 |
-| `test-transfer-e2e.py` | 93 | 镜像包上传/下载：docker/OCI 归档解析、推送请求、chunked 回退、平台选择、导出内容与错误路径 |
-| `test-layers-e2e.py` | 23 | 逐层大小/指令/总量解析 |
-| `test-cleanup-e2e.py` | 21 | 孤立 Artifact 清理的安全规则 |
-| `test-harbor-paging-e2e.py` | 35 | Harbor 列表分页、空列表形状、artifact 全量读取与总览扫描预算 |
-| `test-logs-e2e.py` | 17 | 操作日志的日期范围过滤与分页透传 |
-| `test-retag-e2e.py` | 17 | 重命名 Tag 的真实请求序列 |
-| `test-ecr-e2e.py` | 26 | 私有 ECR 仓库列表（DescribeRepositories）、SigV4/分页、Session Token、环境变量/共享 profile、权限错误与无凭据路径 |
-| `test-mcp-e2e.py` | 51 | MCP 工具的参数校验与绕过安全规则的拒绝路径 |
+| `test-settings-e2e.py` | 193 | 设置持久化、校验与后端实际行为，V2 命名空间、总览和包布局 |
+| `test-ui-e2e.py` | 217 | 界面行为与策略可见性：总览图表、架构徽章、连接切换、空项目侧栏、日志日期筛选、镜像包上传/下载 |
+| `test-transfer-e2e.py` | 93 | 镜像包上传/下载：归档解析、推送请求、分块回退、平台选择、导出内容和错误路径 |
+| `test-layers-e2e.py` | 23 | 逐层大小、指令和总量解析 |
+| `test-cleanup-e2e.py` | 21 | 无 Tag 产物清理的安全规则 |
+| `test-harbor-paging-e2e.py` | 35 | Harbor 列表分页、空列表、artifact 全量读取和总览扫描预算 |
+| `test-logs-e2e.py` | 17 | 操作日志的日期范围过滤和分页 |
+| `test-retag-e2e.py` | 17 | 重命名 Tag 的请求序列 |
+| `test-ecr-e2e.py` | 26 | 私有 ECR 列表、SigV4 分页、Session Token、环境变量/profile、权限错误和无凭据路径 |
+| `test-mcp-e2e.py` | 51 | MCP 工具的参数校验和绕过安全规则的拒绝路径 |
 | `check-contrast.py` / `check-i18n.py` | 全量配色对 / 393 键×2 语言 | 配色对比度门禁、翻译门禁 |
-| `check-packages.py` | 6 个目标 | 每个包二进制的格式/架构/签名与 manifest 路径是否与其平台相符 |
-| `check-browser-baseline.py` | 34 个特性 | UI 是否用了新于 Chrome 109 的 CSS/JS 特性（DBX 的最低引擎） |
+| `check-packages.py` | 6 个目标 | 每个包二进制的格式、架构、签名和 manifest 路径是否与平台相符 |
+| `check-browser-baseline.py` | 34 个特性 | 是否使用了新于 Chrome 109 的 CSS/JS 特性（DBX 最低引擎） |
 
 ## 目录结构
 
@@ -200,14 +197,14 @@ Sidecar 测试跑**打包产物**（`dist/` 里对应当前平台的 `.dbxp` 内
 dbx-plugin-imrepo/
 ├── manifest.json        # 插件清单：connection-provider + workbench + backend（版本号在这里）
 ├── dbx-plugin.toml      # 构建配置（[backend] Go + [package].include）
-├── assets/              # 插件级图标
+├── assets/              # 插件图标
 ├── ui/                  # 工作台 UI（沙箱 iframe，classic script + window.IMREPO）
 │   ├── index.html       # 按依赖顺序加载 js/*（不用 ES module，见 docs/DESIGN.md）
 │   ├── styles.css       # 明/暗主题调色板（私有 --im-* 令牌）
 │   └── js/              # 20 个模块：state / i18n / dom / format / rpc / render-* / main
 ├── backend/             # Go Sidecar
 │   ├── main.go          # SDK 入口 + 身份解析（从包内 manifest 读 id/version）
-│   ├── dispatch.go      # RPC 方法表：51 个方法一览即 API 面
+│   ├── dispatch.go      # RPC 方法表
 │   ├── connection.go    # 连接生命周期与宿主 payload 解析
 │   ├── oci.go           # OCI Registry v2 客户端（含 token-challenge）
 │   ├── harbor.go        # Harbor REST v2.0 客户端
@@ -230,24 +227,22 @@ dbx-plugin-imrepo/
 
 ## 发布
 
-已上架 **DBX 官方商店**（插件 ID `com.leavingrain.imrepo`）。商店条目与签名产物列表见
-[`catalog/index.json`](https://dl.dbxio.com/catalog/index.json)（`dl.dbxio.com` 上的包由 DBX Store
-签名，DBX 安装前会验证该签名）。
+已上架 **DBX 官方商店**（插件 ID `com.leavingrain.imrepo`）。商店条目和签名产物列表见
+[`catalog/index.json`](https://dl.dbxio.com/catalog/index.json)。
 
-几个约束：
+几点约束：
 
-- **`.dbxp` 不提交进 Git**（`dist/` 已忽略），只作为 Release 附件。Release 上是**未签名候选包**，
+- `.dbxp` 不提交进 Git（`dist/` 已忽略），只作为 Release 附件。Release 上是未签名候选包，
   商店分发的是签名后的副本。
-- **Release 附件一旦上传就不可修改**。字节变了（哪怕只是重新打包），候选里的 `sha256`/`size` 就对不上，
-  签名会直接拒绝——必须**重发 Release 并更新候选元数据**。
-- 候选元数据里的 `id`/`version`/`publisher` 必须与包内 `manifest.json` 一致，否则同样被拒。
+- Release 附件上传后不可修改。字节变了（哪怕只是重新打包），候选里的 `sha256` / `size` 就对不上，
+  签名会被拒绝，必须重发 Release 并更新候选元数据。
+- 候选元数据里的 `id` / `version` / `publisher` 必须与包内 `manifest.json` 一致。
 
 ## 文档
 
-- [`docs/DESIGN.md`](docs/DESIGN.md) — 架构、后端 RPC 方法表，以及若干**设计取舍**：打包路径
-  为什么必须按目标改写、主题令牌为什么用私有前缀、为什么用 classic script 而不是 ES module、
-  策略为什么必须落在后端、清理无 Tag 的安全设计。
-- [`CHANGELOG.md`](CHANGELOG.md) — 版本变更。
+- [`docs/DESIGN.md`](docs/DESIGN.md)：架构、后端 RPC 方法表和设计取舍，包括打包路径改写、
+  主题令牌前缀、classic script、后端策略和清理无 Tag 的安全设计。
+- [`CHANGELOG.md`](CHANGELOG.md)：版本变更。
 
 ## 许可
 
